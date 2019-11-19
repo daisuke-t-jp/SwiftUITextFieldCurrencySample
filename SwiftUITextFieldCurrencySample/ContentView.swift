@@ -9,8 +9,43 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var input: Int? = 0
+    
+    func formatter(currencyCode: String) -> NumberFormatter {
+        let formatter = NumberFormatter()
+        formatter.isLenient = true
+        formatter.numberStyle = .currency
+        formatter.currencyCode = currencyCode
+        formatter.maximumFractionDigits = 0
+        formatter.maximumIntegerDigits = 8
+        return formatter
+    }
+    
+    @State private var codeIndex = 0
+    var codeArray = ["USD", "EUR", "JPY"]
+    
+    
     var body: some View {
-        Text("Hello, World!")
+        VStack {
+            
+            Text("Select currency code")
+            
+            Picker(selection: $codeIndex,
+                   label: Text("Select currency code.")) {
+                ForEach(0..<codeArray.count) { index in
+                    Text(self.codeArray[index]).tag(index)
+                }
+            }
+            .pickerStyle(SegmentedPickerStyle())
+            .padding()
+            
+            Spacer()
+                .frame(height: 32)
+            
+            TextField("input here", value: $input, formatter: formatter(currencyCode: codeArray[codeIndex]))
+                .frame(width: 300)
+                .textFieldStyle(RoundedBorderTextFieldStyle())
+        }
     }
 }
 
